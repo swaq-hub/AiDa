@@ -12,7 +12,7 @@ bot = Bot(PAGE_ACCESS_TOKEN)
 def verify():
     # Webhook verification
     if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
-        if not request.args.get("hub.verify_token") == "your-verify-token":
+        if not request.args.get("hub.verify_token") == "joe-mayami":
             return "Verification token mismatch", 403
         return request.args["hub.challenge"], 200
     return "Hello World", 200
