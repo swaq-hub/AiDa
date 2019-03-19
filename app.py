@@ -4,7 +4,7 @@ from pymessenger import Bot
 
 app = Flask(__name__)
 
-PAGE_ACCESS_TOKEN = "your-access-token-here"
+PAGE_ACCESS_TOKEN = "your-access-token"
 
 bot = Bot(PAGE_ACCESS_TOKEN)
 
@@ -12,7 +12,7 @@ bot = Bot(PAGE_ACCESS_TOKEN)
 def verify():
     # Webhook verification
     if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
-        if not request.args.get("hub.verify_token") == "your-verify-token-here":
+        if not request.args.get("hub.verify_token") == "your-verify-token":
             return "Verification token mismatch", 403
         return request.args["hub.challenge"], 200
     return "Hello World", 200
@@ -29,14 +29,11 @@ def webhook():
                 #IDs
                 sender_id = messaging_event['sender']['id']
                 recipient_id = messaging_event['recipient']['id']
-
                 if messaging_event.get('message'):
                     if 'text' in messaging_event['message']:
                         messaging_text = messaging_event['message']['text']
                     else:
                         messaging_text = 'no text'
-                    
-                      messaging_text = 'no text'
                     
                     # Echo
                     response = messaging_text
