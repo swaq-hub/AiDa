@@ -15,7 +15,7 @@ def verify():
         if not request.args.get("hub.verify_token") == "joe-mayami":
             return "Verification token mismatch", 403
         return request.args["hub.challenge"], 200
-    return "Hello World", 200
+    return "verified", 200
 
 @app.route('/', methods=['POST'])
 def webhook():
