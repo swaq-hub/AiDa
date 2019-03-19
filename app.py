@@ -10,7 +10,7 @@ bot = Bot(PAGE_ACCESS_TOKEN)
 
 @app.route('/', methods=['GET'])
 def verify():
-    log (request)
+    log (request.args.get("hub.verify_token"))
     # Webhook verification
     if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
         if not request.args.get("hub.verify_token") == "joe-mayami":
