@@ -29,7 +29,7 @@ def verify():
     
     # Webhook verification
     if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
-        if not request.args.get("hub.verify_token") == "joe-mayami":
+        if not request.args.get("hub.verify_token") == WEBHOOK_VERIFY_TOKEN:
             return "Verification token mismatch", 403
         return request.args["hub.challenge"], 200
     return "verified", 200
