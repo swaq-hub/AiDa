@@ -14,6 +14,7 @@ def verify():
     #send a request to check if the user exist
     token = {'token': request.args.get("hub.verify_token")}
     response = requests.get("https://arcane-scrubland-52062.herokuapp.com/", params=token)
+    log(response.json())
     
     # Webhook verification
     if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
