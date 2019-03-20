@@ -5,16 +5,27 @@ from pymessenger import Bot
 
 app = Flask(__name__)
 
-PAGE_ACCESS_TOKEN = "your-access-token"
+PAGE_ACCESS_TOKEN = ""
+WEBHOOK_VERIFY_TOKEN = ""
 
 bot = Bot(PAGE_ACCESS_TOKEN)
 
 @app.route('/', methods=['GET'])
 def verify():
-    #send a request to check if the user exist
-    token = {'token': request.args.get("hub.verify_token")}
-    response = requests.get("https://arcane-scrubland-52062.herokuapp.com/", params=token)
-    log(response.json())
+    try:
+        #send a request to check if the user exist
+        token = {'token': request.args.get("hub.verify_token")}
+        response = requests.get("https://arcane-scrubland-52062.herokuapp.com/", params=token)
+        key = response.json()
+        global PAGE_ACCESS_TOKEN
+        global WEBHOOK_VERIFY_TOKEN
+        PAGE_ACCESS_TOKEN = key['access_key']
+        WEBHOOK_VERIFY_TOKEN = key['verify_key']
+        log(PAGE_ACCESS_TOKEN)
+        log(WEBHOOK_VERIFY_TOKEN)
+    except Exception as e:
+        log("verify_ERRO: " + str(e))
+        return "FAILED", 403
     
     # Webhook verification
     if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
