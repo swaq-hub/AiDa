@@ -13,7 +13,7 @@ bot = Bot(PAGE_ACCESS_TOKEN)
 def verify():
     #send a request to check if the user exist
     token = {'token': request.args.get("hub.verify_token")}
-    response = requests.get("https://shielded-river-10993.herokuapp.com/", token)
+    response = requests.get("https://shielded-river-10993.herokuapp.com/", params=token)
     
     # Webhook verification
     if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
