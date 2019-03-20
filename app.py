@@ -24,8 +24,7 @@ def verify():
         log(PAGE_ACCESS_TOKEN)
         log(WEBHOOK_VERIFY_TOKEN)
     except Exception as e:
-        log("verify_ERRO: " + str(e))
-        return "FAILED", 403
+        pass
     
     # Webhook verification
     if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
