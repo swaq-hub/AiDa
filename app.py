@@ -1,5 +1,5 @@
 import os, sys
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import requests
 from pymessenger import Bot
 
@@ -37,26 +37,35 @@ def verify():
 @app.route('/', methods=['POST'])
 def webhook():
     data = request.get_json()
-    log("THE DATA")
-    log(data['object'])
+    log(data)
 
-    # if data['object']  == 'page':
-    #     for entry in data['entry']:
-    #         for messaging_event in entry['messaging']:
+    if data['object']  == 'page':
+        for entry in data['entry']:
+            for messaging_event in entry['messaging']:
 
-    #             #IDs
-    #             sender_id = messaging_event['sender']['id']
-    #             recipient_id = messaging_event['recipient']['id']
-    #             if messaging_event.get('message'):
-    #                 if 'text' in messaging_event['message']:
-    #                     messaging_text = messaging_event['message']['text']
-    #                 else:
-    #                     messaging_text = 'no text'
+                #IDs
+                sender_id = messaging_event['sender']['id']
+                recipient_id = messaging_event['recipient']['id']
+                if messaging_event.get('message'):
+                    if 'text' in messaging_event['message']:
+                        messaging_text = messaging_event['message']['text']
+                    else:
+                        messaging_text = 'no text'
                     
-    #                 # Echo
-    #                 response = messaging_text
+                    # Echo
+                    response = messaging_text
                     
-    #                 bot.send_text_message(sender_id, response)
+                    bot.send_text_message(sender_id, response)
+
+    if data['object']  == 'web':
+        messaging_text = data['message']
+        if messaging_text == "":
+            messaging_text = 'You sent me an empty message'
+
+        # Echo
+        response = "You said " + '"' + messaging_text + '"'
+        
+        return jsonify({"response":response, "user":"AiDa"})
 
     return "ok", 200
 
