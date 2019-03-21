@@ -63,7 +63,7 @@ def webhook():
             messaging_text = 'You sent me an empty message'
 
         # Echo
-        response = "You said " + '"' + messaging_text + '"'
+        response = "You said; " + messaging_text
         
         return jsonify({"response":response, "user":"AiDa"})
 
