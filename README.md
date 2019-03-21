@@ -1,5 +1,5 @@
-# maya
-Maya and Open Source Intelligent Chatbot
+# AiDa
+AiDa an open source intelligent chatbot
 
 This is the first phase of the project and it is currently just in echo phase
 This is a simple echo bot that can echo whatever a user say
