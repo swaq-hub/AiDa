@@ -37,7 +37,8 @@ def verify():
 @app.route('/', methods=['POST'])
 def webhook():
     data = request.get_json()
-    log("LOG_ " + str(data))
+    log("THE DATA")
+    log(data['object'])
 
     # if data['object']  == 'page':
     #     for entry in data['entry']:
