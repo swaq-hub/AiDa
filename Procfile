@@ -1,1 +1,1 @@
-web: gunicorn app:aida_api
+web: gunicorn app:manage
