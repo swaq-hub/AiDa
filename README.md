@@ -33,6 +33,6 @@ Response should look like this
 {"response":response, "user":"AiDa"}
 
 
-# P.S: Currently we have put an hold to Social Media Intergrations until futhre notice.
+# P.S: Currently we have put an hold to Social Media Intergrations until futher notice.
 
 We are working to make it better......
