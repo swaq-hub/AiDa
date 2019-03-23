@@ -1,16 +1,26 @@
 import os, sys
-from flask import Flask, request, jsonify
+from flask import Blueprint, jsonify, request, render_template
 import requests
 from pymessenger import Bot
 
-app = Flask(__name__)
+aida_blueprint = Blueprint('aidabot', __name__, template_folder='./templates')
+
+
 
 PAGE_ACCESS_TOKEN = ""
 WEBHOOK_VERIFY_TOKEN = ""
 
 bot = Bot(PAGE_ACCESS_TOKEN)
 
-@app.route('/', methods=['GET'])
+@aida_blueprint.route('/aida/ping', methods=['GET'])
+def ping_pong():
+    return jsonify({
+        'status': 'success',
+        'message': 'pong!'
+    })
+
+
+@aida_blueprint.route('/aida/verify', methods=['GET'])
 def verify():
     try:
         log(request)
@@ -34,7 +44,7 @@ def verify():
         return request.args["hub.challenge"], 200
     return "verified", 200
 
-@app.route('/', methods=['POST'])
+@aida_blueprint.route('/aida/webhook', methods=['POST'])
 def webhook():
     data = request.get_json()
     log(data)
@@ -72,8 +82,3 @@ def webhook():
 def log(message):
     print(message)
     sys.stdout.flush()
-
-
-
-if __name__ == "__main__":
-    app.run(debug = True, port = 80)
