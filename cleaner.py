@@ -8,6 +8,7 @@ status = ""
 total = 0
 failed = 0
 success = 0
+duplicate = 0
 
 
 
@@ -18,8 +19,7 @@ def create_table():
     c.execute("CREATE TABLE IF NOT EXISTS question_answer_pairs(question TEXT, answer TEXT)")
 
 def sql_insert(question, answer):
-    global total
-    total += 1
+    
     if answer == "" or answer == "NULL":
         global failed
         failed += 1
@@ -31,6 +31,27 @@ def sql_insert(question, answer):
             transaction_bldr(sql)
         except Exception as e:
             print('inser_ERROR',str(e))
+
+def find_existing_question(question):
+    try:
+        sql = "SELECT question FROM question_answer_pairs WHERE question = '{}' LIMIT 1".format(question)
+        c.execute(sql)
+        result = c.fetchone()
+        if result != None:
+            return result[0]
+        else: return False
+    except Exception as e:
+        #print(str(e))
+        return False
+def sql_insert_replace_question(question, answer):
+    global duplicate
+    duplicate += 1
+    try:
+        sql = """UPDATE question_answer_pairs SET question = ?, answer = ? WHERE question =?;""".format(question, answer, question)
+        transaction_bldr(sql)
+    except Exception as e:
+        print('s0 insertion',str(e))
+
 
 def transaction_bldr(sql):
     global sql_transaction
@@ -70,10 +91,15 @@ if __name__ == '__main__':
                     column.append(r)
                 question = column[1]
                 answer = column[2]
-
-                sql_insert(question, answer)
+                
+                total += 1
+                find_existing = find_existing_question(question)
+                if find_existing:
+                    sql_insert_replace_question(question, answer)
+                else:               
+                    sql_insert(question, answer)
                 continue
             status = "Completed!"
-    print('{}, Total: {}, Success: {}, False: {}'.format(status, total, success, failed))
+    print('{}, Total: {}, Success: {}, False: {}, Duplicate: {}'.format(status, total, success, failed, duplicate))
     
 
