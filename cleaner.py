@@ -1,4 +1,5 @@
 import sqlite3
+import pandas as pd
 
 db_name = "QA_S08"
 row = []
@@ -16,7 +17,7 @@ connection = sqlite3.connect('{}.db'.format(db_name))
 c = connection.cursor()
 
 def create_table():
-    c.execute("CREATE TABLE IF NOT EXISTS question_answer_pairs(question TEXT, answer TEXT)")
+    c.execute("CREATE TABLE IF NOT EXISTS question_answer_pairs(rowid INTEGER PRIMARY KEY AUTOINCREMENT, question TEXT, answer TEXT)")
 
 def sql_insert(question, answer):
     
@@ -103,3 +104,31 @@ if __name__ == '__main__':
     print('{}, Total: {}, Success: {}, False: {}, Duplicate: {}'.format(status, total, success, failed, duplicate))
     
 
+    if status == "Completed!":
+        connection = sqlite3.connect('{}.db'.format(db_name))
+        c = connection.cursor()
+        limit = 1000
+        last_unix = 0
+        cur_length = limit
+        counter = 0
+        test_done = False
+
+        while cur_length == limit:
+            df = pd.read_sql("SELECT * FROM question_answer_pairs WHERE rowid > {} and question NOT NULL and answer NOT NULL ORDER BY rowid ASC LIMIT {}".format(last_unix, limit),connection)
+            last_unix = df.tail(1)['rowid'].values[0]
+            cur_length = len(df)
+            if not test_done:
+                with open('test.from','a', encoding='utf8') as f:
+                    for content in df['question'].values:
+                        f.write(content+'\n')
+                with open('test.to','a', encoding='utf8') as f:
+                    for content in df['answer'].values:
+                        f.write(str(content)+'\n')
+                test_done = True
+            else:
+                with open('train.from','a', encoding='utf8') as f:
+                    for content in df['question'].values:
+                        f.write(content+'\n')
+                with open('train.to','a', encoding='utf8') as f:
+                    for content in df['answer'].values:
+                        f.write(str(content)+'\n')
